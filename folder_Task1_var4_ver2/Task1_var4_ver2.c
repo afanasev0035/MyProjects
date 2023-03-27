@@ -16,26 +16,26 @@ int main()
     char symb = *p;
     int main_length = strlen(main_str);
 
-    while(length > 1)
+    while (length > 1)
     {
         count = 0;
-        while(p < main_str + main_length)
+        while (p < main_str + main_length)
         {
-            if(*p == symb)
+            if (*p == symb)
             {
                 str[i] = *p;
             }
             else
             {
                 i = 0;
-                if(strlen(str) == 1 && str[i] != 10)
+                if (strlen(str) == 1 && str[i] != 10)
                 {
                     memset(str, 0, MAX);
                     str[i] = *p;
                 }
                 else
                 {
-                    if(strlen(str) > strlen(str_max))
+                    if (strlen(str) > strlen(str_max))
                     {
                         strcpy(str_max, str);
                         end = count;
@@ -45,7 +45,7 @@ int main()
                 }
             }
 
-            if(*p != 10)
+            if (*p != 10)
             {
                 symb = *p;
             }
@@ -58,7 +58,7 @@ int main()
         count = end;
         length = strlen(str_max);
 
-        if(length < 2)
+        if (length < 2)
         {
             continue;
         }
@@ -68,16 +68,16 @@ int main()
         istr = strstr(main_str + start - 1, str_max);
         printf("%d,%d%c\n", start, length, *istr);
 
-        if(length > 1)
+        if (length > 1)
         {
             strncpy(main_str + start - 1, memset(str_max, 0, MAX), length);
             p = main_str;
         }
     }
 
-    for(p = main_str; p < main_str + main_length; p++)
+    for (p = main_str; p < main_str + main_length; p++)
     {
-        if(*p != 0)
+        if (*p != 0)
         {
             printf("%c", *p);
         }
