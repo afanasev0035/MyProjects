@@ -2,71 +2,67 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-#define MAX 50
+#define MAX 15
 
-int max_string (char * main_str){
+int main_func (char * main_str){
+
     char str[MAX] = {0}, str_max[MAX] = {0};
-    int i = 0, count = 0, start = 0, max = 0, length = MAX, pos= 0, j = 1;
-
-    
+    int i = 0, count = 0, max = 0, start= 0, length = MAX, end = 1;
     char * p = main_str;
-    char symb = 0, symb1 = *p;
+    char symb = *p;
     int main_length = strlen(main_str);
-while(length > 1){
-    count = 0;
-    while(p < main_str + main_length)
-    {
 
-        if (*p == symb1){
-        str[i] = *p;
-        
+    while(length > 1){
+
+        count = 0;
+
+        while(p < main_str + main_length){
+
+        if(*p == symb){
+            str[i] = *p;
         }
-        else
-        {
+        else{
             i = 0;
             if(strlen(str) == 1 && str[i] != 10){
                 memset(str, 0, MAX);
                 str[i] = *p;
-                symb = *p;
                 max = 0;
             }
-            else {
-            max = (strlen(str) > strlen(str_max)); 
-            if (max == 1)
-            {
-                strcpy(str_max, str);
-                j = count;
-            }
-            memset(str, 0, MAX);
-            str[i] = *p;
-            symb = *p;
-            max = 0;
+            else{
+                max = (strlen(str) > strlen(str_max));
+                if (max == 1){
+                    strcpy(str_max, str);
+                    end = count;
+                }
+                memset(str, 0, MAX);
+                str[i] = *p;
+                max = 0;
             }
         }
-
-        if(*p != 10)
-        {
-            symb1 = *p;
+        if(*p != 10){
+            symb = *p;
         }
         *p++;
         i++;
         count++;
-    }
-    count = j;
+        }
+    count = end;
     length = strlen(str_max);
     if(length < 2){
         continue;
     }
-    pos = j - length + 1;
+    start = end - length + 1;
     char * istr;
-    istr = strstr(main_str + pos - 1, str_max);
-    printf("%d,%d%c\n", pos, length, *istr);
-    if(length > 1){  
-    strncpy(main_str + pos - 1, memset (str_max, 0, MAX), length);
-    p = main_str;
+    istr = strstr(main_str + start - 1, str_max);
+    printf("%d,%d%c\n", start, length, *istr);
+    if(length > 1){
+        strncpy(main_str + start - 1, memset (str_max, 0, MAX), length);
+        p = main_str;
     }
-}
+    }
+
 for(p = main_str; p < main_str + main_length; p++){
+
     if (*p != 0){
         printf("%c", *p);
     }
@@ -76,11 +72,10 @@ return length;
 
 int main()
 {
-    
     char main_str[MAX] = {0};
-    
+
     fgets(main_str, MAX, stdin);
-    max_string(main_str);
+    main_func(main_str);
 
     return 0;
 }
