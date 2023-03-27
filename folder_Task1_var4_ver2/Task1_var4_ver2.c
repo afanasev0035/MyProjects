@@ -8,11 +8,11 @@
 int main()
 {
     char main_str[MAX] = {0}, str[MAX] = {0}, str_max[MAX] = {0};
-    int i = 0, count = 0, start= 0, length = MAX, end = 1;
+    int i = 0, count = 0, start = 0, length = MAX, end = 1;
 
     fgets(main_str, MAX, stdin);
 
-    char * p = main_str;
+    char *p = main_str;
     char symb = *p;
     int main_length = strlen(main_str);
 
@@ -54,6 +54,7 @@ int main()
             i++;
             count++;
         }
+
         count = end;
         length = strlen(str_max);
 
@@ -63,7 +64,7 @@ int main()
         }
 
         start = end - length + 1;
-        char * istr;
+        char *istr;
         istr = strstr(main_str + start - 1, str_max);
         printf("%d,%d%c\n", start, length, *istr);
 
@@ -72,7 +73,6 @@ int main()
             strncpy(main_str + start - 1, memset(str_max, 0, MAX), length);
             p = main_str;
         }
-
     }
 
     for(p = main_str; p < main_str + main_length; p++)
