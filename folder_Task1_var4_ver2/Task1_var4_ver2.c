@@ -21,35 +21,28 @@ int main()
         count = 0;
         while(p < main_str + main_length)
         {
-
             if(*p == symb)
             {
                 str[i] = *p;
             }
-
             else
             {
                 i = 0;
-
                 if(strlen(str) == 1 && str[i] != 10)
                 {
                     memset(str, 0, MAX);
                     str[i] = *p;
                 }
-
                 else
                 {
-
                     if(strlen(str) > strlen(str_max))
                     {
                         strcpy(str_max, str);
                         end = count;
                     }
-
                     memset(str, 0, MAX);
                     str[i] = *p;
                 }
-
             }
 
             if(*p != 10)
@@ -70,11 +63,8 @@ int main()
         }
 
         start = end - length + 1;
-
         char * istr;
-
         istr = strstr(main_str + start - 1, str_max);
-
         printf("%d,%d%c\n", start, length, *istr);
 
         if(length > 1)
@@ -87,12 +77,10 @@ int main()
 
     for(p = main_str; p < main_str + main_length; p++)
     {
-
         if(*p != 0)
         {
             printf("%c", *p);
         }
-
     }
     return 0;
 }
