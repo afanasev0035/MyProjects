@@ -12,15 +12,17 @@ struct data
 };
 
 // Функция добавления элмента из main---------------------------------------------------------------------
-
+//surname1[] нужно заменить на char *surname1. Не понял смысла в 1 в имени, ф-ия будет спокойно и без нее работать,
+// для приличия хотябы add написал (относится ко всему)
 int addPosition(struct data *table, char surname1[], char faculty1[], char group1[], int id1)
 {
-    if(count > Table_size)
+    if(count > Table_size) //А если cnt = Table_size? Условие не сработает и будет 101 запись
     {
         printf("Table is overloaded!");
         exit(1);
     }
-    strcpy(table[count].surname, surname1);
+    strcpy(table[count].surname, surname1); //В данном случае strcpy это опасное копирвоание. Так как в ф-ию 
+        //может попасть surname1 размера больше 30 см ф-ию snprintf (относится ко всему)
     strcpy(table[count].faculty, faculty1);
     strcpy(table[count].group, group1);
     table[count].id = id1;
@@ -32,23 +34,23 @@ int addPosition(struct data *table, char surname1[], char faculty1[], char group
 int addPositionByKeyboard(struct data *table)
 {
     int id1;
-    char surname1[MAX], faculty1[MAX], group1[MAX];
-    if(count > Table_size)
+    char surname1[MAX], faculty1[MAX], group1[MAX]; //см замечание выше
+    if(count > Table_size) //см замечание выше
     {
         printf("Table is overloaded!");
         exit(1);
     }
     printf("Введите фамилию для добавления\n");
-    scanf("%s", surname1);
-    strcpy(table[count].surname, surname1);
+    scanf("%s", surname1); //вводимое имя может не влезть в строку
+    strcpy(table[count].surname, surname1);//см замечание выше
     printf("Введите факультет для добавления\n");
-    scanf("%s", faculty1);
-    strcpy(table[count].faculty, faculty1);
+    scanf("%s", faculty1);//вводимое имя может не влезть в строку
+    strcpy(table[count].faculty, faculty1);//см замечание выше
     printf("Введите группу для добавления\n");
-    scanf("%s", group1);
-    strcpy(table[count].group, group1);
+    scanf("%s", group1);//вводимое имя может не влезть в строку
+    strcpy(table[count].group, group1);//см замечание выше
     printf("Введите id для добавления\n");
-    scanf("%d", &id1);
+    scanf("%d", &id1);//вводимое имя может не влезть в строку
     table[count].id = id1;
     count++;
 }
@@ -84,6 +86,8 @@ int deletePosition(struct data *table)
         printf("Строка удалена!\n");
     }
     count--;
+    //Еще бы полседнюю струтуру занулить была бы красота. Из-за смещений должны быть две одинаковые структуры подряд
+    // см ф-ию memset
 }
 
 //Функция редактирования записи -------------------------------------------------------------------------
@@ -92,24 +96,24 @@ int editPosition(struct data *table)
 {
     int stroka, stolbec;
     printf("Введите номер строки для изменения\n");
-    scanf("%d", &stroka);
+    scanf("%d", &stroka);//см замечание выше
     printf("Введите номер столбца для изменения(0 - Фамилия, 1 - Факультет, 2 - Группа, 3 - Id)\n");
-    scanf("%d", &stolbec);
+    scanf("%d", &stolbec);//см замечание выше
     printf("Введите новое значение\n");
     if(stolbec == 0)
     {
         memset(table[stroka].surname, 0, MAX);
-        scanf("%s", table[stroka].surname);
+        scanf("%s", table[stroka].surname);//см замечание выше
     }
     if(stolbec == 1)
     {
         memset(table[stroka].faculty, 0, MAX);
-        scanf("%s", table[stroka].faculty);
+        scanf("%s", table[stroka].faculty);//см замечание выше
     }
     if(stolbec == 2)
     {
         memset(table[stroka].group, 0, MAX);
-        scanf("%s", table[stroka].group);
+        scanf("%s", table[stroka].group);//см замечание выше
     }
     if(stolbec == 3)
     {
@@ -124,19 +128,19 @@ int search(struct data *table)
 {
     int stolbec, id1;
     int check = 0;
-    char surname1[MAX], faculty1[MAX], group1[MAX];
+    char surname1[MAX], faculty1[MAX], group1[MAX];//см замечание выше
     printf("Введите номер столбца для поиска(0 - Фамилия, 1 - Факультет, 2 - Группа, 3 - Id)\n");
     scanf("%d", &stolbec);
     if(stolbec == 0)
     {
         printf("Введите искомую фамилию\n");
-        scanf("%s", surname1);
+        scanf("%s", surname1);//см замечание выше
         for(int i = 0; i <= count; i++)
         {
-            if(strcmp(surname1, table[i].surname) == 0)
+            if(strcmp(surname1, table[i].surname) == 0) //str[n]cmp так как привет и привет00 при strcmp будут одинаковы
             {
                 printf("Искомая строка: %s %s %s %d\n", table[i].surname, table[i].faculty, table[i].group, table[i].id);
-                check++;
+                check++; // мб return или break? зачем нужна это переменная
             }
             else if(i == count && check == 0)
             {
@@ -148,13 +152,13 @@ int search(struct data *table)
     if(stolbec == 1)
     {
         printf("Введите искомый факультет\n");
-        scanf("%s", faculty1);
+        scanf("%s", faculty1);//см замечание выше
         for(int i = 0; i <= count; i++)
         {
-            if(strcmp(faculty1, table[i].faculty) == 0)
+            if(strcmp(faculty1, table[i].faculty) == 0)//см замечание выше
             {
                 printf("Искомая строка: %s %s %s %d\n", table[i].surname, table[i].faculty, table[i].group, table[i].id);
-                check++;
+                check++;//см замечание выше
             }
             else if(i == count && check == 0)
             {
@@ -166,13 +170,13 @@ int search(struct data *table)
     if(stolbec == 2)
     {
         printf("Введите искомую группу\n");
-        scanf("%s", group1);
+        scanf("%s", group1);//см замечание выше
         for(int i = 0; i <= count; i++)
         {
-            if(strcmp(group1, table[i].group) == 0)
+            if(strcmp(group1, table[i].group) == 0)//см замечание выше
             {
                 printf("Искомая строка: %s %s %s %d\n", table[i].surname, table[i].faculty, table[i].group, table[i].id);
-                check++;
+                check++;//см замечание выше
             }
             else if(i == count && check == 0)
             {
@@ -190,7 +194,7 @@ int search(struct data *table)
             if(id1 == table[i].id)
             {
                 printf("Искомая строка: %s %s %s %d\n", table[i].surname, table[i].faculty, table[i].group, table[i].id);
-                check++;
+                check++;//см замечание выше
             }
             else if(i == count && check == 0)
             {
@@ -228,7 +232,7 @@ int cmpGroup(const void *a, const void *b)
 
 int cmpId(const void *A, const void *B)
 {
-    int sortA = ((const struct data *)A)->id;
+    int sortA = ((const struct data *)A)->id;// можно прям в if преообразовать или memcmp использовать
     int sortB = ((const struct data *)B)->id;
     if(sortA < sortB)
     {
@@ -380,6 +384,7 @@ int sortBubble(struct data *table)
 int main()
 {
     char surname[MAX], faculty[MAX], group[MAX];
+    // ниже бы строку просто задефайнил бы
     char interface[500] = {"Какое действие необходимо выполнить с таблицей?\n0 - добавление строки, 1 - вывод таблицы, 2 - удаление строки, 3 - редактирование позиции, 4 -найти позицию, 5 - отсортировать с помощью qsort, 6 - сортировка пузырьком, e - закончить работу с таблицей\n"};
     int id;
     int position_number = 0, stok;
