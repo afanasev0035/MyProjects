@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define MAX 30
+#define MAX 31
+#define MAX_INTERFACE 500
 
 const int Table_size = 100;
 int count = 0;
@@ -13,17 +14,17 @@ struct data
 
 // Функция добавления элмента из main---------------------------------------------------------------------
 
-int addPosition(struct data *table, char surname1[], char faculty1[], char group1[], int id1)
+int addPosition(struct data *table, char *surname_add, char *faculty_add, char *group_add, int id_add)
 {
-    if(count > Table_size)
+    if(count >= Table_size)
     {
         printf("Table is overloaded!");
         exit(1);
     }
-    strcpy(table[count].surname, surname1);
-    strcpy(table[count].faculty, faculty1);
-    strcpy(table[count].group, group1);
-    table[count].id = id1;
+    snprintf(table[count].surname, MAX, "%s", surname_add);
+    snprintf(table[count].faculty, MAX, "%s", faculty_add);
+    snprintf(table[count].group, MAX, "%s", group_add);
+    table[count].id = id_add;
     count++;
 }
 
@@ -31,25 +32,72 @@ int addPosition(struct data *table, char surname1[], char faculty1[], char group
 
 int addPositionByKeyboard(struct data *table)
 {
-    int id1;
-    char surname1[MAX], faculty1[MAX], group1[MAX];
-    if(count > Table_size)
+    int success = 0;
+    getchar();
+    if(count >= Table_size)
     {
         printf("Table is overloaded!");
         exit(1);
     }
     printf("Введите фамилию для добавления\n");
-    scanf("%s", surname1);
-    strcpy(table[count].surname, surname1);
+    for(int i = 0; i < MAX; i++)
+        {
+            scanf("%c", &table[count].surname[i]);
+            if(table[count].surname[i] == '\n')
+            {
+                table[count].surname[i] = 0;
+                success++;
+                break;
+            }
+        }
+        if(success == 0)
+        {
+            while (getchar() != '\n');
+            printf("Превышено ограничение на ввод символов(30)!\n");
+            memset(table[count].surname, 0, MAX);
+            return -1;
+        }
+    success = 0;
     printf("Введите факультет для добавления\n");
-    scanf("%s", faculty1);
-    strcpy(table[count].faculty, faculty1);
+    for(int i = 0; i < MAX; i++)
+        {
+            scanf("%c", &table[count].faculty[i]);
+            if(table[count].faculty[i] == '\n')
+            {
+                table[count].faculty[i] = 0;
+                success++;
+                break;
+            }
+        }
+        if(success == 0)
+        {
+            while (getchar() != '\n');
+            printf("Превышено ограничение на ввод символов(30)!\n");
+            memset(table[count].faculty, 0, MAX);
+            return -1;
+        }
+    success = 0;
     printf("Введите группу для добавления\n");
-    scanf("%s", group1);
-    strcpy(table[count].group, group1);
+    for(int i = 0; i < MAX; i++)
+        {
+            scanf("%c", &table[count].group[i]);
+            if(table[count].group[i] == '\n')
+            {
+                table[count].group[i] = 0;
+                success++;
+                break;
+            }
+        }
+        if(success == 0)
+        {
+            while (getchar() != '\n');
+            printf("Превышено ограничение на ввод символов(30)!\n");
+            memset(table[count].group, 0, MAX);
+            return -1;
+        }
+    success = 0;
     printf("Введите id для добавления\n");
-    scanf("%d", &id1);
-    table[count].id = id1;
+    scanf("%d", &table[count].id);
     count++;
 }
 
@@ -82,8 +130,77 @@ int deletePosition(struct data *table)
             table[i] = table[i + 1];
         }
         printf("Строка удалена!\n");
+        memset(table[count].surname, 0, MAX);
+        memset(table[count].faculty, 0, MAX);
+        memset(table[count].group, 0, MAX);
+        table[count].id = 0;
     }
     count--;
+}
+
+//Функция чтения строки посимвольно--------------------------------------------------------------------
+
+int enterPosition(struct data *table, int stroka, int stolbec)
+{
+    int success = 0;
+    getchar();
+    if(stolbec == 0)
+    {
+        for(int i = 0; i < MAX; i++)
+        {
+            scanf("%c", &table[stroka].surname[i]);
+            if(table[stroka].surname[i] == '\n')
+            {
+                table[stroka].surname[i] = 0;
+                success++;
+                break;
+            }
+        }
+        if(success == 0)
+        {
+            while (getchar() != '\n');
+            printf("Превышено ограничение на ввод символов(30)!\n");
+            return -1;
+        }
+    }
+    if(stolbec == 1)
+    {
+        for(int i = 0; i < MAX; i++)
+        {
+            scanf("%c", &table[stroka].faculty[i]);
+            if(table[stroka].faculty[i] == '\n')
+            {
+                table[stroka].faculty[i] = 0;
+                success++;
+                break;
+            }
+        }
+        if(success == 0)
+        {
+            while (getchar() != '\n');
+            printf("Превышено ограничение на ввод символов(30)!\n");
+            return -1;
+        }
+    }
+    if(stolbec == 2)
+    {
+        for(int i = 0; i < MAX; i++)
+        {
+            scanf("%c", &table[stroka].group[i]);
+            if(table[stroka].group[i] == '\n')
+            {
+                table[stroka].group[i] = 0;
+                success++;
+                break;
+            }
+        }
+        if(success == 0)
+        {
+            while (getchar() != '\n');
+            printf("Превышено ограничение на ввод символов(30)!\n");
+            return -1;
+        }
+    }
 }
 
 //Функция редактирования записи -------------------------------------------------------------------------
@@ -95,21 +212,43 @@ int editPosition(struct data *table)
     scanf("%d", &stroka);
     printf("Введите номер столбца для изменения(0 - Фамилия, 1 - Факультет, 2 - Группа, 3 - Id)\n");
     scanf("%d", &stolbec);
+    char surname_buf[MAX] = {0};
+    char faculty_buf[MAX] = {0};
+    char group_buf[MAX] = {0};
+    snprintf(surname_buf, MAX, "%s", table[stroka].surname);
+    snprintf(faculty_buf, MAX, "%s", table[stroka].faculty);
+    snprintf(group_buf, MAX, "%s", table[stroka].group);
+    int id_buf = table[stroka].id;
     printf("Введите новое значение\n");
     if(stolbec == 0)
     {
         memset(table[stroka].surname, 0, MAX);
-        scanf("%s", table[stroka].surname);
+        if(enterPosition(table, stroka, stolbec) == -1)
+        {
+            memset(table[stroka].surname, 0, MAX);
+            snprintf(table[stroka].surname, MAX, "%s", surname_buf);
+            return 1;
+        }
     }
     if(stolbec == 1)
     {
         memset(table[stroka].faculty, 0, MAX);
-        scanf("%s", table[stroka].faculty);
+        if(enterPosition(table, stroka, stolbec) == -1)
+        {
+            memset(table[stroka].faculty, 0, MAX);
+            snprintf(table[stroka].faculty, MAX, "%s", faculty_buf);
+            return 1;
+        }
     }
     if(stolbec == 2)
     {
         memset(table[stroka].group, 0, MAX);
-        scanf("%s", table[stroka].group);
+        if(enterPosition(table, stroka, stolbec) == -1)
+        {
+            memset(table[stroka].group, 0, MAX);
+            snprintf(table[stroka].group, MAX, "%s", group_buf);
+            return 1;
+        }
     }
     if(stolbec == 3)
     {
@@ -124,19 +263,39 @@ int search(struct data *table)
 {
     int stolbec, id1;
     int check = 0;
-    char surname1[MAX], faculty1[MAX], group1[MAX];
+    int success = 0;
+    char surname[MAX] = {0};
+    char faculty[MAX] = {0};
+    char group[MAX] = {0};
     printf("Введите номер столбца для поиска(0 - Фамилия, 1 - Факультет, 2 - Группа, 3 - Id)\n");
     scanf("%d", &stolbec);
     if(stolbec == 0)
     {
         printf("Введите искомую фамилию\n");
-        scanf("%s", surname1);
+        getchar();
+        for(int i = 0; i < MAX; i++)
+        {
+            scanf("%c", &surname[i]);
+            if(surname[i] == '\n')
+            {
+                surname[i] = 0;
+                success++;
+                break;
+            }
+        }
+        if(success == 0)
+        {
+            while (getchar() != '\n');
+            printf("Превышено ограничение на ввод символов(30)!\n");
+            memset(surname, 0, MAX);
+            return -1;
+        }
         for(int i = 0; i <= count; i++)
         {
-            if(strcmp(surname1, table[i].surname) == 0)
+            if(strncmp(surname, table[i].surname, MAX) == 0)
             {
                 printf("Искомая строка: %s %s %s %d\n", table[i].surname, table[i].faculty, table[i].group, table[i].id);
-                check++;
+                check++; //break и return приведут к останову цикла или функции. В этом случае функция не найдёт другие строки с совпадающим значением, если такие есть
             }
             else if(i == count && check == 0)
             {
@@ -148,13 +307,30 @@ int search(struct data *table)
     if(stolbec == 1)
     {
         printf("Введите искомый факультет\n");
-        scanf("%s", faculty1);
+        getchar();
+        for(int i = 0; i < MAX; i++)
+        {
+            scanf("%c", &faculty[i]);
+            if(faculty[i] == '\n')
+            {
+                faculty[i] = 0;
+                success++;
+                break;
+            }
+        }
+        if(success == 0)
+        {
+            while (getchar() != '\n');
+            printf("Превышено ограничение на ввод символов(30)!\n");
+            memset(faculty, 0, MAX);
+            return -1;
+        }
         for(int i = 0; i <= count; i++)
         {
-            if(strcmp(faculty1, table[i].faculty) == 0)
+            if(strncmp(faculty, table[i].faculty, MAX) == 0)
             {
                 printf("Искомая строка: %s %s %s %d\n", table[i].surname, table[i].faculty, table[i].group, table[i].id);
-                check++;
+                check++; //break и return приведут к останову цикла или функции. В этом случае функция не найдёт другие строки с совпадающим значением, если такие есть
             }
             else if(i == count && check == 0)
             {
@@ -166,13 +342,30 @@ int search(struct data *table)
     if(stolbec == 2)
     {
         printf("Введите искомую группу\n");
-        scanf("%s", group1);
+        getchar();
+        for(int i = 0; i < MAX; i++)
+        {
+            scanf("%c", &group[i]);
+            if(group[i] == '\n')
+            {
+                group[i] = 0;
+                success++;
+                break;
+            }
+        }
+        if(success == 0)
+        {
+            while (getchar() != '\n');
+            printf("Превышено ограничение на ввод символов(30)!\n");
+            memset(group, 0, MAX);
+            return -1;
+        }
         for(int i = 0; i <= count; i++)
         {
-            if(strcmp(group1, table[i].group) == 0)
+            if(strncmp(group, table[i].group, MAX) == 0)
             {
                 printf("Искомая строка: %s %s %s %d\n", table[i].surname, table[i].faculty, table[i].group, table[i].id);
-                check++;
+                check++; //break и return приведут к останову цикла или функции. В этом случае функция не найдёт другие строки с совпадающим значением, если такие есть
             }
             else if(i == count && check == 0)
             {
@@ -228,9 +421,9 @@ int cmpGroup(const void *a, const void *b)
 
 int cmpId(const void *A, const void *B)
 {
-    int sortA = ((const struct data *)A)->id;
-    int sortB = ((const struct data *)B)->id;
-    if(sortA < sortB)
+    int sortA;
+    int sortB;
+    if((sortA = ((const struct data *)A)->id) < (sortB = ((const struct data *)B)->id))
     {
         return -1;
     }
@@ -380,7 +573,7 @@ int sortBubble(struct data *table)
 int main()
 {
     char surname[MAX], faculty[MAX], group[MAX];
-    char interface[500] = {"Какое действие необходимо выполнить с таблицей?\n0 - добавление строки, 1 - вывод таблицы, 2 - удаление строки, 3 - редактирование позиции, 4 -найти позицию, 5 - отсортировать с помощью qsort, 6 - сортировка пузырьком, e - закончить работу с таблицей\n"};
+    char interface[MAX_INTERFACE ] = {"Какое действие необходимо выполнить с таблицей?\n0 - добавление строки, 1 - вывод таблицы, 2 - удаление строки, 3 - редактирование позиции, 4 -найти позицию, 5 - отсортировать с помощью qsort, 6 - сортировка пузырьком, e - закончить работу с таблицей\n"};
     int id;
     int position_number = 0, stok;
     struct data table[Table_size];
